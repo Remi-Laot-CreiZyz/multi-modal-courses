@@ -41,6 +41,31 @@ function addTrack(timeline){
 
 function addEvent(track, trackEvent){
 	track.append('<div class="timeline-track-event" data-type="'+trackEvent.type+'" data-start="'+trackEvent.startTime+'" data-end="'+trackEvent.endTime+'" data-fragment="'+trackEvent.fragment+'"></div>');
+	var eventDrag = track.children(":last");
+	eventDrag.draggable({
+		stop: function( event, ui ) {
+			
+
+			var dureeEvent = ($(this).width()/track.width())*parseFloat(track.closest(".timeline-panel").attr("data-duree"));
+			var start = (($(this).offset().left-track.offset().left)/track.width())*parseFloat(track.closest(".timeline-panel").attr("data-duree"));
+			var end = start+dureeEvent;
+			$(this).attr("data-start", start);
+			$(this).attr("data-end", end);
+		},
+		axis: "x",
+	});
+
+	eventDrag.resizable({
+		animate: true,
+		handles: "e",
+		stop: function(event, ui) {
+			var dureeEvent = ($(this).width()/track.width())*parseFloat(track.closest(".timeline-panel").attr("data-duree"));
+			var start = (($(this).offset().left-track.offset().left)/track.width())*parseFloat(track.closest(".timeline-panel").attr("data-duree"));
+			var end = start+dureeEvent;
+			$(this).attr("data-start", start);
+			$(this).attr("data-end", end);
+		}
+	});
 }
 
 function getTrack(timeline, index)
