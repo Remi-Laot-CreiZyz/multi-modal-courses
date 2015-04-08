@@ -1,11 +1,13 @@
 /* PDF */
-.pdf-context
+.canvas-wrapper
 {
-	overflow-y: scroll;
+	margin: 0.5em 1em 0.5em 0em;
+	border: 1px solid #AAAAAA;
 }
 
 #pdf-container
 {
+	overflow-y: scroll;
 	width: 100%;
 }
 
@@ -26,11 +28,18 @@
 }
 
 /* TIMELINE */
-.timeline-panel
+#timeline
+{
+	position: fixed;
+	width: 100%; height: 25%;
+	bottom: 0;
+}
+
+.timeline-panel,
+.control-panel
 {
 	margin: 0; padding: 0;
-	bottom: 0; height: 25%;
-	max-height: 80%; min-height: 5%;
+	bottom: 0; height: 100% !important;
 	border-left: 1px solid #AAAAAA;
 }
 
@@ -59,17 +68,20 @@
 
 .timeline-zone-selector
 {
+	position: fixed;
 	bottom: 0px;
 	height: 60px; width: 100%;
 	padding: 10px 0px 10px 0px;
 	border-top: 1px solid #AAAAAA;
+	background-color: white;
 }
 
 .timeline-track
 {
-	height: 1.5em; width: 100%;
+	height: 1em; width: 100%;
 	margin: 1px 0px 2px 0px;
 	border-bottom: 1px solid white;
+	opacity: 0.5;
 }
 
 /* slider time timeline */
@@ -95,7 +107,8 @@
 .timeline-zone-selector .ui-slider
 {
 	height: 31px;
-	margin: 4px 5px 0px 5px;
+	margin: 4px 5px 0px;
+	padding: 0px 5px 0px;
 	background: #E4E4E4;
 }
 

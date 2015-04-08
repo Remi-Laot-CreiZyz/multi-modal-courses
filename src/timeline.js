@@ -4,11 +4,6 @@ $(document).ready(function(){
 	// $('#timeline').mouseover(function(e){
 	// 	$('#positionInTimeline').html('temps: ' + ((event.pageX/$(this).width())*parseFloat($(this).find(".timeline-panel").attr("data-duree"))).toFixed(2))
 	// });
-
-	$(window).resize(function(){
-		console.log("window resized");
-		// resizeTimeline($('#timeline'));
-	});
 });
 
 function createTimeline(timelineElement, duree){
@@ -42,20 +37,42 @@ function createTimeline(timelineElement, duree){
 		$('<div/>',{class:"row row-right-control2"}).appendTo($(right_control));
 		$('<div/>',{class:"row row-right-control3"}).appendTo($(right_control));
 
-		$('<button/>',{type:"submit",class:"btn-primary", style:"width:6em"}).text("débuit annotation").appendTo($('<div/>',{class:"col-xs-6 right-control"}).appendTo($('.row-right-control1')));
-		$('<button/>',{type:"submit",class:"btn-primary", style:"width:6em"}).text("fin annotation").appendTo($('<div/>',{class:"col-xs-6 right-control"}).appendTo($('.row-right-control1')));
+		$('<button/>',{type:"submit",class:"btn-primary", style:"width:6em", id:"addTrack"}).text("addTrack").appendTo($('<div/>',{class:"col-xs-6 right-control"}).appendTo($('.row-right-control1')));
+		$('<button/>',{type:"submit",class:"btn-primary", style:"width:6em",id:"deleteTrack"}).text("deleteTrack").appendTo($('<div/>',{class:"col-xs-6 right-control"}).appendTo($('.row-right-control1')));
+
+		$("#addTrack").click(function(){
+			//alert("addTrack");
+			addTrack($("#timeline"));
+		});
+
 
 		
-		$('<button/>',{type:"submit",class:"btn-primary", style:"width:6em"}).text("assigner").appendTo($('<div/>',{class:"col-xs-6 right-control"}).appendTo($('.row-right-control3')));
-		$('<button/>',{type:"submit",class:"btn-primary", style:"width:6em"}).text("editer").appendTo($('<div/>',{class:"col-xs-6 right-control"}).appendTo($('.row-right-control3')));
 
+
+		$('<button/>',{type:"submit",class:"btn-primary", style:"width:6em",id:"ajout-frament"}).text("ajout-frament").appendTo($('<div/>',{class:"col-xs-6 right-control"}).appendTo($('.row-right-control3')));
+		
+		$("#ajout-frament").click(function(){
+			var selected_track = $('.timeline-tracks-holder > .selected');
+			console.log(selected_track);
+			if (!$.isEmptyObject(selected_track)){
+				var newEvent = addEvent(selected_track, {
+					type: 'pdf',
+					startTime: 0, // CURRENT TIME VIDEO
+					endTime: 5, // CURRENT TIME VIDEO + 5
+					fragment: 'urlPdf?page=1&offsetx=0&offsety=0&width=200&height=100'
+				});
+				resizeEventsTimeline($('#timeline'));
+				displayFragment(newEvent);
+			}
+			//alert("addTrack");
+			// addEvent(getTrack($("#timeline",$('.selected').index())),{type:'pdf',startTime:$("#video").currentTime,endTime:$("#video").currentTime+2,});
+		});
+
+		$('<button/>',{type:"submit",class:"btn-primary", style:"width:6em"}).text("editer").appendTo($('<div/>',{class:"col-xs-6 right-control"}).appendTo($('.row-right-control3')));
 
 	/* timeline-panel */
 	timelineElement.append('<div class="timeline-panel col-xs-12 col-md-9" data-duree="'+duree+'"></div>')
 	var timeline_panel = $('.timeline-panel');
-	// timeline_panel.resizable({
-	// 	handles: "n"
-	// });
 		// Time controls
 		timeline_panel.append('<div class="timeline-controls"></div>');
 		$('.timeline-controls').append('<div id="timeline-time-slider"></div>');
@@ -75,26 +92,9 @@ function createTimeline(timelineElement, duree){
 
 
 	// TESTS
-	addTrack(timelineElement);
-	addTrack(timelineElement);
-	addTrack(timelineElement);
-	addTrack(timelineElement);
-	addTrack(timelineElement);
-	addTrack(timelineElement);
-	addTrack(timelineElement);
-	addTrack(timelineElement);
-	addTrack(timelineElement);
-	addTrack(timelineElement);
-	addTrack(timelineElement);
-	addTrack(timelineElement);
-	addTrack(timelineElement);
-	addTrack(timelineElement);
-	addEvent(getTrack(timelineElement, 0), {type:"pdf", startTime: 1, endTime: 2.5, fragment: "urlPdf/?page=1&offsetx=25&offsety=25&width=90&height=90"});
-	addEvent(getTrack(timelineElement, 2), {type:"pdf", startTime: 20, endTime: 30, fragment: "urlPdf/?offsetx=&offsety=&width=&height="});
-	addEvent(getTrack(timelineElement, 1), {type:"pdf", startTime: 15, endTime: 25.8, fragment: "urlPdf/?offsetx=&offsety=&width=&height="});
-	addEvent(getTrack(timelineElement, 0), {type:"pdf", startTime: 4, endTime: 13, fragment: "urlPdf/?offsetx=&offsety=&width=&height="});
-	displayFragment(getEvent(getTrack(timelineElement, 0), 0));
-	resizeTimeline(timelineElement);
+	//addTrack(timelineElement);
+	
+	resizeEventsTimeline(timelineElement);
 }
 
 function resizeEvent(timeline, event){
@@ -106,7 +106,7 @@ function resizeEvent(timeline, event){
 	event.css('left', (time_start/duree_timeline) * timeline.width() + timeline.offset().left);
 }
 
-function resizeTimeline(timeline){
+function resizeEventsTimeline(timeline){
 	// Resize each events
 	timeline.find('.timeline-track-event').each(function(){
 		resizeEvent(timeline, $(this));
@@ -114,10 +114,20 @@ function resizeTimeline(timeline){
 }
 
 function addTrack(timeline){
-	timeline.find('.timeline-tracks-holder').append('<div class="timeline-track"></div>');
+	timeline.find('.timeline-track.selected').removeClass('selected');
+	timeline.find('.timeline-tracks-holder').append('<div class="timeline-track selected"></div>');
+	$(".timeline-track" ).off();
+	$(".timeline-track").click(function(){
+		if ($(this).hasClass('selected')) $(this).removeClass('selected');
+		else{
+			$('.timeline-track.selected').removeClass('selected');
+			$(this).addClass('selected');
+		}
+	})
 }
 
 function addEvent(track, trackEvent){
+	console.log(track);
 	track.append('<div class="timeline-track-event" data-type="'+trackEvent.type+'" data-start="'+trackEvent.startTime+'" data-end="'+trackEvent.endTime+'" data-fragment="'+trackEvent.fragment+'"></div>');
 	var addedEvent = track.children(":last");
 
@@ -130,6 +140,7 @@ function addEvent(track, trackEvent){
 			var end = start+dureeEvent;
 			$(this).attr("data-start", start);
 			$(this).attr("data-end", end);
+			resizeEventsTimeline($('#timeline'));
 		}
 	});
 
@@ -143,9 +154,12 @@ function addEvent(track, trackEvent){
 			var start = parseFloat($(this).attr("data-start"));
 			var end = Math.min(start + dureeEvent, parseFloat(track.closest(".timeline-panel").attr("data-duree")));
 			$(this).attr("data-end", end);
+			resizeEventsTimeline($('#timeline'));
 		}
 	});
-
+	console.log('event added');
+	console.log(addedEvent);
+	return addedEvent;
 }
 
 function getTrack(timeline, index)

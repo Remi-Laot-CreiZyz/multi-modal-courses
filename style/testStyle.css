@@ -1,38 +1,20 @@
 
-#row1{
-	background-color: black;
-	color: white;
-	height: 50px;
-}
-
-#video-style{
-	background: #DEDEDE;
-	height: 100%;
-	-webkit-transform-style: preserve-3d;  -moz-transform-style: preserve-3d;  transform-style: preserve-3d;
+#header
+{
+	border-bottom: 1px solid #AAAAAA;
+	height: 30px;
 }
 
 #video-container{
-	background: white;
-	width: 80%;
-	height: 60%;
-	position: relative;  top: 50%;  transform: translateY(-50%);
-	margin-left: auto;
-	margin-right: auto;
-}
-
-.video-wrapper{
 	background: #DEDEDE;
-	width: 80%;
-	height: 60%;
-	position: relative;  top: 50%;  transform: translateY(-50%);
-	margin-left: auto;
-	margin-right: auto;
+	height: 100%;
 }
 
-#video{
-	position: relative;  top: 50%;  transform: translateY(-50%);
-	margin-left: auto;
-	margin-right: auto;
+#video-wrapper{
+	background: white;
+	width: 95%;
+	margin: auto;
+	vertical-align: middle;
 }
 
 .right-control *{

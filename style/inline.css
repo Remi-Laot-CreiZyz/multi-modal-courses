@@ -89,9 +89,14 @@
 }
 
 /* TIMELINE */
+.timeline-tracks-holder > .selected
+{
+	background: white;
+}
+
 .timeline-track-event
 {
-	min-height: 1.3em; max-height: 1.3em;
+	min-height: 1.2em; max-height: 1.2em;
 	display: inline-block;
 	position: absolute;
 	border-radius: 0.2em 0.2em 0.2em 0.2em;

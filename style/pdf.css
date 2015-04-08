@@ -6,6 +6,11 @@
 	position: relative;
 }
 
+.pdf-wrapper
+{
+	position: relative;
+}
+
 .pdf-fragment
 {
 	position: absolute;

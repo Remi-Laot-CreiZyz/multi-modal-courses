@@ -1,9 +1,4 @@
-var pdfUrl = null,
-	pdfDoc = null,
-	pdfPage = null,
-	scale = 1,
-	waitForLoadingPdfPage = false,
-	waitForLoadingPdfDocument = false;
+var	waitForLoadingPdfDocument = false;
 
 $(document).ready(function(){
 	//
@@ -12,80 +7,61 @@ $(document).ready(function(){
     //
     PDFJS.disableWorker = true;
 
-	var fragment = 'rapport_cles.pdf?page=1';
-	loadPage(fragment);
+	var fragment = 'rapport_cles.pdf?page=2';
+	loadPdf(fragment);
 });
 
-function loadPdf(fragment, callback){
-	var url = fragment.split('?')[0];
-	console.log(url);
-	pdfDoc = null; // reset variable
-	pdfUrl = null;
+function loadPdf(fragment){
+	var url = fragment.split('?')[0],
+		parameters = fragment.split('?')[1].split('&'),
+		pageIndex = -1;
 
-	if (!waitForLoadingPdfDocument){
+	// Looks for page parameter
+	for (var i = 0; i < parameters.length; i++)
+		if (parameters[i].split('=')[0] == 'page')
+			pageIndex = i;
+
+
+	if (!waitForLoadingPdfDocument && pageIndex != -1){
+		var pdfDoc = null;
 		waitForLoadingPdfDocument = true;
 		PDFJS.getDocument(url).then(function (pdfDoc_) {
-			waitForLoadingPdfDocument = false;
-			pdfUrl = url;
 			pdfDoc = pdfDoc_;
-			if (callback == loadPage) callback(fragment);
+			for (var i = 1; i <= pdfDoc_.numPages; i++){
+				waitForLoadingPdfDocument = false;
+				loadPage(i);
+			}
 		});
 	}
-}
 
-function loadPage(fragment){
-	if (!waitForLoadingPdfPage){
-		waitForLoadingPdfPage = true;
-		var parameters = fragment.split('?')[1].split('&'),
-			pageIndex = -1;
+	function loadPage(page_number){
 
-		// Looks for page parameter
-		for (var i = 0; i < parameters.length; i++)
-			if (parameters[i].split('=')[0] == 'page')
-				pageIndex = i;
+		function renderPage(page) {
+			var viewport = page.getViewport(1);
+			var canvas = document.createElement('canvas');
+			var ctx = canvas.getContext('2d');
+			var renderContext = { canvasContext: ctx, viewport: viewport };
 
-		if (pageIndex != -1){
-			// We load the pdf
-		 	if (pdfUrl != fragment.split('?')[0]){
-		 		loadPdf(fragment, loadPage);
-				waitForLoadingPdfPage = false;
-		 	}
-		 	// We load the page
-		 	else {
-		 		pdfDoc.getPage(parseInt(parameters[pageIndex].split('=')[1])).then(function(page) {
-					var pdfViewBox = page.pageInfo.view;
-					var pdfPageWidth = pdfViewBox[2];
-					var pdfPageHeight = pdfViewBox[3];
+			var pdf_container = document.getElementById('pdf-container');
+			var scale = $(pdf_container).innerWidth() / viewport.width * 0.95;
 
-					var width = $('#pdf-container').width();
-					var height = (pdfPageHeight/pdfPageWidth) * width;
-					var scale = height / pdfPageHeight;
-					
-					var viewport = new PDFJS.PageViewport(pdfViewBox, scale, page.rotate, 0,0);
+			canvas.height = viewport.height * scale;
+			canvas.width = viewport.width * scale;
 
-					$('#pdf-container').append('<div class="canvas-wrapper" data-page="'+parameters[pageIndex].split('=')[1]+'"><canvas class="pdf-context"/></div>');
-					var canvas_wrapper = $('#pdf-container').children('.canvas-wrapper:last');
+			viewport = page.getViewport(scale);
 
-					canvas_wrapper.width(width);
-					canvas_wrapper.height(height);
-					canvas_wrapper.find('.pdf-context').width(width);
-					canvas_wrapper.find('.pdf-context').height(height);
+			var canvas_wrapper = document.createElement('div');
+			canvas_wrapper.appendChild(canvas);
+			document.getElementById('pdf-container').appendChild(canvas_wrapper);
 
-					console.log(canvas_wrapper.find('canvas').get(0));
-					console.log(scale);
-					console.log(canvas_wrapper.find('canvas').get(0).getContext('2d'));
-					var canvasContext = canvas_wrapper.find('canvas').get(0).getContext('2d');
+			$(canvas).addClass('pdf-context').attr('data-page', page_number).attr('data-scale', scale);
+			$(canvas_wrapper).addClass('canvas-wrapper').attr('data-page', page_number).attr('data-scale', scale);
 
-					var renderTask = page.render({canvasContext:canvasContext,viewport:viewport});
-
-					// Wait for rendering to finish
-					renderTask.promise.then(function() {
-						console.log('chargement page termine!');
-						waitForLoadingPdfPage = false;
-					});
-				});
-		 	}
+			page.render(renderContext);
 		}
+
+		pdfDoc.getPage(page_number).then(renderPage)
+
 	}
 }
 
@@ -97,7 +73,6 @@ function displayFragment(eventElement){
 		offsetYIndex = -1,
 		widthIndex = -1,
 		heightIndex = -1;
-
 	// Looks for page parameter
 	for (var i = 0; i < parameters.length; i++){
 		if (parameters[i].split('=')[0] == 'page')
@@ -113,37 +88,34 @@ function displayFragment(eventElement){
 	}
 
 	if (pageIndex != -1 && offsetXIndex != -1 && offsetYIndex != -1 && widthIndex != -1 && heightIndex != -1){
+		console.log("affichage fragment ("+eventElement.attr('data-fragment')+")")
 		var target_canvas_wrapper = $('#pdf-container').find('.canvas-wrapper[data-page='+parameters[pageIndex].split('=')[1]+']');
-		// Si la page n'est pas affichée
-		if (!target_canvas_wrapper) {
-			loadPage(eventElement.attr('data-fragment'));
-		}
-		// Si la page est affichée
-		else {
+		// Si la page est pas affichée
+		if (target_canvas_wrapper) {
 			target_canvas_wrapper.append('<div class="pdf-fragment"></div>');
-			var addedDiv = target_canvas_wrapper.children(':last');
+			var addedDiv = target_canvas_wrapper.find('.pdf-fragment:last');
 
-			addedDiv.width(parseFloat(parameters[widthIndex].split('=')[1]) * scale);
-			addedDiv.height(parseFloat(parameters[heightIndex].split('=')[1]) * scale);
-			addedDiv.css('left', ((parseFloat(parameters[offsetXIndex].split('=')[1]) * scale)));
-			addedDiv.css('top', ((parseFloat(parameters[offsetYIndex].split('=')[1]) * scale)));
+			addedDiv.width(parseFloat(parameters[widthIndex].split('=')[1]) * parseFloat(addedDiv.closest('.canvas-wrapper').attr('data-scale')));
+			addedDiv.height(parseFloat(parameters[heightIndex].split('=')[1]) * parseFloat(addedDiv.closest('.canvas-wrapper').attr('data-scale')));
+			addedDiv.css('left', ((parseFloat(parameters[offsetXIndex].split('=')[1]) * parseFloat(addedDiv.closest('.canvas-wrapper').attr('data-scale')))));
+			addedDiv.css('top', ((parseFloat(parameters[offsetYIndex].split('=')[1]) * parseFloat(addedDiv.closest('.canvas-wrapper').attr('data-scale')))));
 
 			// RESIZABLE FRAGMENT
 			addedDiv.resizable({
 				containment: "parent",
 				handles : "n,s,e,w,ne,nw,se,sw",
 				stop: function( event, ui ) {
-					var pdf_container = $('#pdf-container');
+					var pdf_container = $(this).closest('.canvas-wrapper');
 					var newFragment = fragment.split('?')[0];
-					var width = Math.min((event.pageX - $(this).offset().left), pdf_container.width())/scale; // $(this).width n'est pas mit à jours lorsque l'event est lancé
-					var height = Math.min((event.pageY - $(this).offset().top), pdf_container.height())/scale; // $(this).height n'est pas mit à jours lorsque l'event est lancé
+					var width = Math.min((event.pageX - $(this).offset().left), pdf_container.width())/parseFloat($(this).closest('.canvas-wrapper').attr('data-scale')); // $(this).width n'est pas mit à jours lorsque l'event est lancé
+					var height = Math.min((event.pageY - $(this).offset().top), pdf_container.height())/parseFloat($(this).closest('.canvas-wrapper').attr('data-scale')); // $(this).height n'est pas mit à jours lorsque l'event est lancé
 					for (var i = 0; i < parameters.length; i++){
 						if (i != 0)
 							newFragment += '&';
 						if (parameters[i].split('=')[0] == 'offsetx')
-							newFragment += 'offsetx=' + ($(this).offset().left - pdf_container.offset().left)/scale;
+							newFragment += 'offsetx=' + ($(this).offset().left - pdf_container.offset().left)/parseFloat($(this).closest('.canvas-wrapper').attr('data-scale'));
 						else if (parameters[i].split('=')[0] == 'offsety')
-							newFragment += 'offsety=' + ($(this).offset().top - pdf_container.offset().top)/scale;
+							newFragment += 'offsety=' + ($(this).offset().top - pdf_container.offset().top)/parseFloat($(this).closest('.canvas-wrapper').attr('data-scale'));
 						else if (parameters[i].split('=')[0] == 'width')
 							newFragment += 'width=' + width;
 						else if (parameters[i].split('=')[0] == 'height')
@@ -159,15 +131,15 @@ function displayFragment(eventElement){
 			addedDiv.draggable({
 				containment: "parent",
 				stop: function( event, ui ) {
-					var pdf_container = $('#pdf-container');
+					var pdf_container = $(this).closest('.canvas-wrapper');
 					var newFragment = fragment.split('?')[0];
 					for (var i = 0; i < parameters.length; i++){
 						if (i != 0)
 							newFragment += '&';
 						if (parameters[i].split('=')[0] == 'offsetx')
-							newFragment += 'offsetx=' + ($(this).offset().left - pdf_container.offset().left)/scale;
+							newFragment += 'offsetx=' + ($(this).offset().left - pdf_container.offset().left)/parseFloat($(this).closest('.canvas-wrapper').attr('data-scale'));
 						else if (parameters[i].split('=')[0] == 'offsety')
-							newFragment += 'offsety=' + ($(this).offset().top - pdf_container.offset().top)/scale;
+							newFragment += 'offsety=' + ($(this).offset().top - pdf_container.offset().top)/parseFloat($(this).closest('.canvas-wrapper').attr('data-scale'));
 						else
 							newFragment += parameters[i];
 					}
