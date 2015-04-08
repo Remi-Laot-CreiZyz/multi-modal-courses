@@ -52,7 +52,7 @@ function loadPage(fragment){
 		 	}
 		 	// We load the page
 		 	else {
-		 		pdfDoc.getPage(parseInt(parameters[pageIndex].split('=')[1])).then(function(page) {
+		 		/*pdfDoc.getPage(parseInt(parameters[pageIndex].split('=')[1])).then(function(page) {
 					var pdfViewBox = page.pageInfo.view;
 					var pdfPageWidth = pdfViewBox[2];
 					var pdfPageHeight = pdfViewBox[3];
@@ -83,7 +83,31 @@ function loadPage(fragment){
 						console.log('chargement page termine!');
 						waitForLoadingPdfPage = false;
 					});
-				});
+				});*/
+	
+				function renderPage(page) {
+					var viewport = page.getViewport(1);
+					var canvas = document.createElement('canvas');
+					var ctx = canvas.getContext('2d');
+					var renderContext = {
+						canvasContext: ctx,
+						viewport: viewport
+					};
+
+					canvas.height = viewport.height;
+					canvas.width = viewport.width;
+					pdf_container = document.getElementById("pdf-container");
+					pdf_container.appendChild(canvas);
+					page.render(renderContext);
+				}
+
+				function renderPages(pdfDoc) {
+					for(var num = 1; num <= pdfDoc.numPages; num++)
+					pdfDoc.getPage(num).then(renderPage);
+				}
+
+				PDFJS.disableWorker = true;
+				PDFJS.getDocument("rapport_cles.pdf").then(renderPages);
 		 	}
 		}
 	}

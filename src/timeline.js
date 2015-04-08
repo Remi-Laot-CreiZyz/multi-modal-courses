@@ -46,7 +46,7 @@ function createTimeline(timelineElement, duree){
 		$('<button/>',{type:"submit",class:"btn-primary", style:"width:6em"}).text("fin annotation").appendTo($('<div/>',{class:"col-xs-6 right-control"}).appendTo($('.row-right-control1')));
 
 		
-		$('<button/>',{type:"submit",class:"btn-primary", style:"width:6em"}).text("assigner").appendTo($('<div/>',{class:"col-xs-6 right-control"}).appendTo($('.row-right-control3')));
+		$('<button/>',{type:"submit",class:"btn-primary", style:"width:6em", id:"assigner"}).text("assigner").appendTo($('<div/>',{class:"col-xs-6 right-control"}).appendTo($('.row-right-control3')));
 		$('<button/>',{type:"submit",class:"btn-primary", style:"width:6em"}).text("editer").appendTo($('<div/>',{class:"col-xs-6 right-control"}).appendTo($('.row-right-control3')));
 
 
