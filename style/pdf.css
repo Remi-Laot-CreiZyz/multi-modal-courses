@@ -1,0 +1,11 @@
+#pdf-container
+{
+	display: inline-block;
+}
+
+.pdf-fragment
+{
+	position: absolute;
+	background-color: red;
+	opacity: 0.5;
+}

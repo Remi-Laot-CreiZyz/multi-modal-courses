@@ -1,28 +1,36 @@
 <head>
 	<!-- JQuery -->
 	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+	<!-- jQuery UI libray -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.3/jquery-ui.min.js"></script>
 	<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.3/themes/smoothness/jquery-ui.css">
-	<!-- Timeline -->
+	<!-- PDF.JS -->
+	<script type="text/javascript" src="../lib/pdf.js"></script>
+	<script type="text/javascript" src="../lib/pdf.worker.js"></script>
+	<!-- JS SCRIPTS -->
+	<script type="text/javascript" src="../src/pdf.js"></script>
 	<script type="text/javascript" src="../src/timeline.js"></script>
-	<!-- jQuery UI libray -->
-	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.3/jquery-ui.min.js"></script>
-	<link rel="stylesheet" type="text/css" href="../style/timeline.css">
-	<!-- jQuery UI libray -->
-	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.3/jquery-ui.min.js"></script>
-	<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.3/themes/smoothness/jquery-ui.css">
+	<!-- BOOTSTRAP -->
+	<link rel="stylesheet" type="text/css" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
 	<!-- CSS -->
-	<link rel="stylesheet" type="text/css" href="../style/timeline.css">
+	<link rel="stylesheet" type="text/css" href="../style/global.css">
+	<link rel="stylesheet" type="text/css" href="../style/inline.css">
+	<link rel="stylesheet" type="text/css" href="../style/pdf.css">
 </head>
 <header>
 	<!-- LOGO - Titre projet en cours - IMPORT - EXPORT -->
 </header>
 <body>
 	<div id="video-container">
-
+		<div class="video-wrapper">
+		</div>
 	</div>
 	<div id="pdf-container">
-		
+		<div class="canvas-wrapper">
+			<canvas id="pdf-context"></canvas>
+		</div>
 	</div>
+		<span id="positionInTimeline"></span>
 	<div id="timeline">
 		
 	</div>
