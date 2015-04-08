@@ -16,22 +16,37 @@
 	<link rel="stylesheet" type="text/css" href="../style/global.css">
 	<link rel="stylesheet" type="text/css" href="../style/inline.css">
 	<link rel="stylesheet" type="text/css" href="../style/pdf.css">
+	<link rel="stylesheet" type="text/css" href="../style/testStyle.css">
 </head>
 <header>
 	<!-- LOGO - Titre projet en cours - IMPORT - EXPORT -->
+	
 </header>
 <body>
-	<div id="video-container">
-		<div class="video-wrapper">
+	<div class="container-fluid">
+		<div class="row" id="row1">
+		  <div class="col-xs-6">Titre projet</div>
+		  <div class="col-xs-6">Titre pdf</div>
 		</div>
-	</div>
-	<div id="pdf-container">
-		<div class="canvas-wrapper">
-			<canvas id="pdf-context"></canvas>
+
+		<div class="row">
+			  <div class="col-xs-6" id="video-style">
+			  	<div id="video-container">
+					<div class="video-wrapper"></div>
+						<video id="video" width="320" height="240">
+						<source src="../data/video.webm" type="video/webm">
+						  <source src="../data/video.mp4" type="video/mp4">
+						  <source src="../data/video.ogg" type="video/ogg">
+						Your browser does not support the video tag.
+						</video> 
+					</div>
+			  </div>
+			  <div class="col-xs-6">
+			  	<div id="pdf-container">
+				</div>
+			  </div>
 		</div>
-	</div>
 		<span id="positionInTimeline"></span>
-	<div id="timeline">
-		
+		<div id="timeline"></div>
 	</div>
 </body>

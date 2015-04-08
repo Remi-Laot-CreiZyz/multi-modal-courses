@@ -1,6 +1,9 @@
 #pdf-container
 {
 	display: inline-block;
+	overflow-y: scroll;
+	height: 100%;
+	position: relative;
 }
 
 .pdf-fragment

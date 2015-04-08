@@ -15,7 +15,7 @@ function createTimeline(timelineElement, duree){
 	timelineElement.addClass('row');
 	
 	/* control-panel-top */
-	timelineElement.append('<div class="control-panel col-md-2"></div>');
+	timelineElement.append('<div class="col-xs-6 col-md-3 control-panel"></div>');
 	var control_panel = $('.control-panel');
 		// Video controls 
 		control_panel.append('<div class="video-controls"></div>');
@@ -28,9 +28,30 @@ function createTimeline(timelineElement, duree){
 			$('#time span').html("/"+duree);
 		// Track controls
 		control_panel.append('<div class="track-controls"></div>');
+		var track_controls = $('.track-controls');
+		$('<div/>',{class:"row"}).appendTo(track_controls);
+		$('<div/>',{class:"col-xs-4 left-control"}).appendTo(track_controls.find($('.row')));
+		$('<div/>',{class:"col-xs-8 right-control"}).appendTo(track_controls.find($('.row')));
+
+		var left_control = $('.left-control');
+
+
+		var right_control = $('.right-control');
+
+		$('<div/>',{class:"row row-right-control1"}).appendTo($(right_control));
+		$('<div/>',{class:"row row-right-control2"}).appendTo($(right_control));
+		$('<div/>',{class:"row row-right-control3"}).appendTo($(right_control));
+
+		$('<button/>',{type:"submit",class:"btn-primary", style:"width:6em"}).text("débuit annotation").appendTo($('<div/>',{class:"col-xs-6 right-control"}).appendTo($('.row-right-control1')));
+		$('<button/>',{type:"submit",class:"btn-primary", style:"width:6em"}).text("fin annotation").appendTo($('<div/>',{class:"col-xs-6 right-control"}).appendTo($('.row-right-control1')));
+
+		
+		$('<button/>',{type:"submit",class:"btn-primary", style:"width:6em"}).text("assigner").appendTo($('<div/>',{class:"col-xs-6 right-control"}).appendTo($('.row-right-control3')));
+		$('<button/>',{type:"submit",class:"btn-primary", style:"width:6em"}).text("editer").appendTo($('<div/>',{class:"col-xs-6 right-control"}).appendTo($('.row-right-control3')));
+
 
 	/* timeline-panel */
-	timelineElement.append('<div class="timeline-panel col-md-10" data-duree="'+duree+'"></div>')
+	timelineElement.append('<div class="timeline-panel col-xs-12 col-md-9" data-duree="'+duree+'"></div>')
 	var timeline_panel = $('.timeline-panel');
 	// timeline_panel.resizable({
 	// 	handles: "n"
@@ -68,7 +89,7 @@ function createTimeline(timelineElement, duree){
 	addTrack(timelineElement);
 	addTrack(timelineElement);
 	addTrack(timelineElement);
-	addEvent(getTrack(timelineElement, 0), {type:"pdf", startTime: 1, endTime: 2.5, fragment: "urlPdf/?page=2&offsetx=25&offsety=25&width=90&height=90"});
+	addEvent(getTrack(timelineElement, 0), {type:"pdf", startTime: 1, endTime: 2.5, fragment: "urlPdf/?page=1&offsetx=25&offsety=25&width=90&height=90"});
 	addEvent(getTrack(timelineElement, 2), {type:"pdf", startTime: 20, endTime: 30, fragment: "urlPdf/?offsetx=&offsety=&width=&height="});
 	addEvent(getTrack(timelineElement, 1), {type:"pdf", startTime: 15, endTime: 25.8, fragment: "urlPdf/?offsetx=&offsety=&width=&height="});
 	addEvent(getTrack(timelineElement, 0), {type:"pdf", startTime: 4, endTime: 13, fragment: "urlPdf/?offsetx=&offsety=&width=&height="});

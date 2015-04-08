@@ -4,6 +4,11 @@
 	overflow-y: scroll;
 }
 
+#pdf-container
+{
+	width: 100%;
+}
+
 /* CONTROLS */
 .control-panel
 {

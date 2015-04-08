@@ -1,0 +1,56 @@
+
+#row1{
+	background-color: black;
+	color: white;
+	height: 50px;
+}
+
+#video-style{
+	background: #DEDEDE;
+	height: 100%;
+	-webkit-transform-style: preserve-3d;  -moz-transform-style: preserve-3d;  transform-style: preserve-3d;
+}
+
+#video-container{
+	background: white;
+	width: 80%;
+	height: 60%;
+	position: relative;  top: 50%;  transform: translateY(-50%);
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.video-wrapper{
+	background: #DEDEDE;
+	width: 80%;
+	height: 60%;
+	position: relative;  top: 50%;  transform: translateY(-50%);
+	margin-left: auto;
+	margin-right: auto;
+}
+
+#video{
+	position: relative;  top: 50%;  transform: translateY(-50%);
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.right-control *{
+	margin: auto;
+}
+
+.row-right-control1{
+	height: 40px; width: 100%;
+	padding: 10px 0px 10px 0px;
+	margin-top: 40px;
+}
+
+.row-right-control2{
+	top: 40px; bottom: 60px;
+	width: 100%;
+}
+
+.row-right-control3{
+	height: 1.5em; width: 100%;
+	margin: 1px 0px 2px 0px;
+}
