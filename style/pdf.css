@@ -1,0 +1,14 @@
+#pdf-container
+{
+	display: inline-block;
+	overflow-y: scroll;
+	height: 100%;
+	position: relative;
+}
+
+.pdf-fragment
+{
+	position: absolute;
+	background-color: red;
+	opacity: 0.5;
+}

@@ -1,24 +1,52 @@
 <head>
 	<!-- JQuery -->
 	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
-	<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.3/themes/smoothness/jquery-ui.css">
-	<!-- Timeline -->
-	<script type="text/javascript" src="../src/timeline.js"></script>
 	<!-- jQuery UI libray -->
 	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.3/jquery-ui.min.js"></script>
-	<link rel="stylesheet" type="text/css" href="../style/timeline.css">
+	<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.3/themes/smoothness/jquery-ui.css">
+	<!-- PDF.JS -->
+	<script type="text/javascript" src="../lib/pdf.js"></script>
+	<script type="text/javascript" src="../lib/pdf.worker.js"></script>
+	<!-- JS SCRIPTS -->
+	<script type="text/javascript" src="../src/pdf.js"></script>
+	<script type="text/javascript" src="../src/timeline.js"></script>
+	<!-- BOOTSTRAP -->
+	<link rel="stylesheet" type="text/css" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+	<!-- CSS -->
+	<link rel="stylesheet" type="text/css" href="../style/global.css">
+	<link rel="stylesheet" type="text/css" href="../style/inline.css">
+	<link rel="stylesheet" type="text/css" href="../style/pdf.css">
+	<link rel="stylesheet" type="text/css" href="../style/testStyle.css">
 </head>
 <header>
 	<!-- LOGO - Titre projet en cours - IMPORT - EXPORT -->
+	
 </header>
 <body>
-	<div id="video-container">
+	<div class="container-fluid">
+		<div class="row" id="row1">
+		  <div class="col-xs-6">Titre projet</div>
+		  <div class="col-xs-6">Titre pdf</div>
+		</div>
 
-	</div>
-	<div id="pdf-container">
-		
-	</div>
-	<div id="timeline">
-		
+		<div class="row">
+			  <div class="col-xs-6" id="video-style">
+			  	<div id="video-container">
+					<div class="video-wrapper"></div>
+						<video id="video" width="320" height="240">
+						<source src="../data/video.webm" type="video/webm">
+						  <source src="../data/video.mp4" type="video/mp4">
+						  <source src="../data/video.ogg" type="video/ogg">
+						Your browser does not support the video tag.
+						</video> 
+					</div>
+			  </div>
+			  <div class="col-xs-6">
+			  	<div id="pdf-container">
+				</div>
+			  </div>
+		</div>
+		<span id="positionInTimeline"></span>
+		<div id="timeline"></div>
 	</div>
 </body>

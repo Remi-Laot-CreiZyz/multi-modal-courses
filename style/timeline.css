@@ -1,21 +1,13 @@
-.timeline-panel
-{
-	width: 100%;
-	background-color: blue;
-}
-
 .timeline-track
 {
-	height: 1em;
-	width: 100%;
-	background-color: red;
+	
 }
 
 .timeline-track-event
 {
-	height: 1em;
-	min-height: 1em;
-	max-height: 1em;
-	width: 0em;
+	height: 1em; width: 0em;
+	min-height: 1em; max-height: 1em;
+	display: inline-block;
+	position: absolute;
 	background-color: orange;
 }

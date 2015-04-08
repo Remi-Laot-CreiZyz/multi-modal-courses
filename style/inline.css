@@ -1,0 +1,99 @@
+/* CONTROLS */
+.play
+{
+	width: 36px; height: 34px;
+	display: inline-block;
+	cursor: pointer;
+	background: url(../ressources/play.png) no-repeat; overflow: hidden;
+}
+
+.pause
+{
+	width: 36px; height: 34px;
+	display: inline-block;
+	cursor: pointer;
+	background: url(../ressources/pause.png) no-repeat; overflow: hidden;
+}
+
+#playpause
+{
+	margin: 15px 10px 0px 50px;
+}
+
+.volume-100
+{
+	width: 31px; height: 28px;
+	display: inline-block;
+	cursor: pointer;
+	background: url(../ressources/volume_100.png) no-repeat; overflow: hidden;
+}
+
+.volume-50
+{
+	width: 31px; height: 28px;
+	display: inline-block;
+	cursor: pointer;
+	background: url(../ressources/volume_50.png) no-repeat; overflow: hidden;
+}
+
+.volume-0
+{
+	width: 31px; height: 28px;
+	display: inline-block;
+	cursor: pointer;
+	background: url(../ressources/volume_0.png) no-repeat; overflow: hidden;
+}
+
+#volume
+{
+	margin: 15px 10px 0px 10px;
+}
+
+.video-controls .time-detail
+{
+	display: inline-block;
+	text-align: center;
+	width: 10em;
+	font-size: 75%;
+	font-weight: 700%;
+	font-family: 'Open Sans',sans-serif;
+	border: 1px solid #D8D8D8;
+	border-radius: 0.4em 0.4em 0.4em 0.4em;
+	padding: 0.2em 0.3em 0.2em 0.3em;
+	margin: 0.4em 0em 0.4em 0em;
+	cursor: text;
+}
+
+.video-controls input
+{
+	text-align: center;
+	width: 4em;
+	border: none;
+	box-shadow: none;
+	outline: none;
+	padding: 0;
+	margin: 0;
+	max-width: inherit;
+}
+
+#time
+{
+	margin: 15px 10px 0px 10px;
+}
+
+.video-controls *
+{
+	margin-left: auto;
+	margin-right: auto;
+	vertical-align: middle;
+}
+
+/* TIMELINE */
+.timeline-track-event
+{
+	min-height: 1.3em; max-height: 1.3em;
+	display: inline-block;
+	position: absolute;
+	border-radius: 0.2em 0.2em 0.2em 0.2em;
+	background-color: #5882FA;
+}
