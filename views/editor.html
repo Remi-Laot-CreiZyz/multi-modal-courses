@@ -1,4 +1,5 @@
 <head>
+	<title>editor</title>
 	<!-- JQuery -->
 	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
 	<!-- jQuery UI libray -->
@@ -10,6 +11,7 @@
 	<!-- JS SCRIPTS -->
 	<script type="text/javascript" src="../src/pdf.js"></script>
 	<script type="text/javascript" src="../src/timeline.js"></script>
+	<script type="text/javascript" src="../src/resize.js"></script>
 	<!-- BOOTSTRAP -->
 	<link rel="stylesheet" type="text/css" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
 	<!-- CSS -->
@@ -24,29 +26,21 @@
 </header>
 <body>
 	<div class="container-fluid">
-		<div class="row" id="row1">
+		<div id="header" class="row">
 		  <div class="col-xs-6">Titre projet</div>
 		  <div class="col-xs-6">Titre pdf</div>
 		</div>
 
-		<div class="row">
-			  <div class="col-xs-6" id="video-style">
-			  	<div id="video-container">
-					<div class="video-wrapper"></div>
-						<video id="video" width="320" height="240">
-						<source src="../data/video.webm" type="video/webm">
-						  <source src="../data/video.mp4" type="video/mp4">
-						  <source src="../data/video.ogg" type="video/ogg">
-						Your browser does not support the video tag.
-						</video> 
-					</div>
+		<div id="content" class="row">
+			  <div id="video-container" class="col-xs-6">
+			  	<div id="video-wrapper">
+				</div>
 			  </div>
 			  <div class="col-xs-6">
 			  	<div id="pdf-container">
 				</div>
 			  </div>
 		</div>
-		<span id="positionInTimeline"></span>
 		<div id="timeline"></div>
 	</div>
 </body>
