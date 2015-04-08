@@ -64,6 +64,7 @@ function addEvent(track, trackEvent){
 			var end = start+dureeEvent;
 			$(this).attr("data-start", start);
 			$(this).attr("data-end", end);
+			console.log(end);
 		}
 	});
 }
