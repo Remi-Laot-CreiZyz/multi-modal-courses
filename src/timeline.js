@@ -53,6 +53,14 @@ function createTimeline(timelineElement, duree){
 				alert("no timline selected");
 				return;
 			}
+			//console.log($(".timeline-track.selected"));
+			$(".timeline-track.selected").find(".timeline-track-event").each(function(){
+				var eventFragment = $(this);
+				console.log(eventFragment);
+				$(".pdf-fragment").each(function(){
+					if($(this).attr("data-id")==eventFragment.attr("data-id"))$(this).remove();
+				});
+			}).remove();
 			$(".selected").remove();
 		});
 		
