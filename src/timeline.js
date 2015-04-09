@@ -49,6 +49,10 @@ function createTimeline(timelineElement, duree){
 		$('<button/>',{type:"submit",class:"btn-primary", style:"width:6em",id:"deleteTrack"}).text("supprimer track").appendTo($('<div/>',{class:"col-xs-6 right-control"}).appendTo($('.row-right-control1')));
 
 		$("#deleteTrack").click(function(){
+			if(!$(".timeline-track").hasClass('selected')){
+				alert("no timline selected");
+				return;
+			}
 			$(".selected").remove();
 		});
 		
@@ -57,6 +61,10 @@ function createTimeline(timelineElement, duree){
 		$('<button/>',{type:"submit",class:"btn-primary", style:"width:6em",id:"ajout-frament"}).text("ajouter fragment").appendTo($('<div/>',{class:"col-xs-6 right-control"}).appendTo($('.row-right-control3')));
 		
 		$("#ajout-frament").click(function(){
+			if(!$(".timeline-track").hasClass('selected')){
+				alert("no timline selected");
+				return;
+			}
 			var selected_track = $('.timeline-tracks-holder > .selected');
 			//console.log(selected_track);
 			if (!$.isEmptyObject(selected_track)){
@@ -79,6 +87,10 @@ function createTimeline(timelineElement, duree){
 		$('<button/>',{type:"submit",class:"btn-primary", style:"width:6em", id:"deleteFragment"}).text("supprimer fragment").appendTo($('<div/>',{class:"col-xs-6 right-control"}).appendTo($('.row-right-control3')));
 
 		$("#deleteFragment").click(function(){
+			if(!$(".timeline-track-event").hasClass('selectedevent')){
+				alert("no fragment selected");
+				return;
+			}
 			var eventFragment = $(".selectedevent");
 			console.log(eventFragment);
 
