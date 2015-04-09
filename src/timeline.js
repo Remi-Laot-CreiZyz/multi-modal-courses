@@ -1,3 +1,5 @@
+var idCount = 0;
+
 $(document).ready(function(){
 	createTimeline($('#timeline'), 36.51);
 	
@@ -37,36 +39,57 @@ function createTimeline(timelineElement, duree){
 		$('<div/>',{class:"row row-right-control2"}).appendTo($(right_control));
 		$('<div/>',{class:"row row-right-control3"}).appendTo($(right_control));
 
-		$('<button/>',{type:"submit",class:"btn-primary", style:"width:6em", id:"addTrack"}).text("addTrack").appendTo($('<div/>',{class:"col-xs-6 right-control"}).appendTo($('.row-right-control1')));
-		$('<button/>',{type:"submit",class:"btn-primary", style:"width:6em",id:"deleteTrack"}).text("deleteTrack").appendTo($('<div/>',{class:"col-xs-6 right-control"}).appendTo($('.row-right-control1')));
-
+		$('<button/>',{type:"submit",class:"btn-primary", style:"width:6em", id:"addTrack"}).text("ajouter track").appendTo($('<div/>',{class:"col-xs-6 right-control"}).appendTo($('.row-right-control1')));
+		
 		$("#addTrack").click(function(){
 			//alert("addTrack");
 			addTrack($("#timeline"));
 		});
 
+		$('<button/>',{type:"submit",class:"btn-primary", style:"width:6em",id:"deleteTrack"}).text("supprimer track").appendTo($('<div/>',{class:"col-xs-6 right-control"}).appendTo($('.row-right-control1')));
 
-		$('<button/>',{type:"submit",class:"btn-primary", style:"width:6em",id:"ajout-frament"}).text("ajout-frament").appendTo($('<div/>',{class:"col-xs-6 right-control"}).appendTo($('.row-right-control3')));
+		$("#deleteTrack").click(function(){
+			$(".selected").remove();
+		});
+		
+
+
+		$('<button/>',{type:"submit",class:"btn-primary", style:"width:6em",id:"ajout-frament"}).text("ajouter fragment").appendTo($('<div/>',{class:"col-xs-6 right-control"}).appendTo($('.row-right-control3')));
 		
 		$("#ajout-frament").click(function(){
 			var selected_track = $('.timeline-tracks-holder > .selected');
-			console.log(selected_track);
+			//console.log(selected_track);
 			if (!$.isEmptyObject(selected_track)){
 				var newEvent = addEvent(selected_track, {
 					type: 'pdf',
 					startTime: 0, // CURRENT TIME VIDEO
 					endTime: 5, // CURRENT TIME VIDEO + 5
-					fragment: 'urlPdf?page='+getCurrentPage()+'&offsetx=0&offsety=0&width=200&height=100'
+					fragment: 'urlPdf?id='+idCount+'&page='+getCurrentPage()+'&offsetx=0&offsety=0&width=200&height=100'
 				});
 				resizeEventsTimeline($('#timeline'));
 				displayFragment(newEvent);
+
+
 			}
-			alert(getCurrentPage());
+			//alert(getCurrentPage());
 			//alert("addTrack");
 			// addEvent(getTrack($("#timeline",$('.selected').index())),{type:'pdf',startTime:$("#video").currentTime,endTime:$("#video").currentTime+2,});
 		});
 
-		$('<button/>',{type:"submit",class:"btn-primary", style:"width:6em"}).text("editer").appendTo($('<div/>',{class:"col-xs-6 right-control"}).appendTo($('.row-right-control3')));
+		$('<button/>',{type:"submit",class:"btn-primary", style:"width:6em", id:"deleteFragment"}).text("supprimer fragment").appendTo($('<div/>',{class:"col-xs-6 right-control"}).appendTo($('.row-right-control3')));
+
+		$("#deleteFragment").click(function(){
+			var eventFragment = $(".selectedevent");
+			console.log(eventFragment);
+
+			if(eventFragment.length!=0){
+				$(".pdf-fragment").each(function(){
+					if($(this).attr("data-id")==eventFragment.attr("data-id"))$(this).remove();
+				});
+				eventFragment.remove();
+				idCount=idCount-1;
+			}
+		});
 
 	/* timeline-panel */
 	timelineElement.append('<div class="timeline-panel col-xs-12 col-md-9" data-duree="'+duree+'"></div>')
@@ -115,7 +138,7 @@ function addTrack(timeline){
 	timeline.find('.timeline-track.selected').removeClass('selected');
 	timeline.find('.timeline-tracks-holder').append('<div class="timeline-track selected"></div>');
 	$(".timeline-track" ).off();
-	$(".timeline-track").click(function(){
+	$(".timeline-track").dblclick(function(){
 		if ($(this).hasClass('selected')) $(this).removeClass('selected');
 		else{
 			$('.timeline-track.selected').removeClass('selected');
@@ -125,9 +148,18 @@ function addTrack(timeline){
 }
 
 function addEvent(track, trackEvent){
-	console.log(track);
-	track.append('<div class="timeline-track-event" data-type="'+trackEvent.type+'" data-start="'+trackEvent.startTime+'" data-end="'+trackEvent.endTime+'" data-fragment="'+trackEvent.fragment+'"></div>');
+	$('.timeline-track-event').removeClass('selectedevent');
+	track.append('<div class="timeline-track-event selectedevent" data-id="'+idCount+'" data-type="'+trackEvent.type+'" data-start="'+trackEvent.startTime+'" data-end="'+trackEvent.endTime+'" data-fragment="'+trackEvent.fragment+'"></div>');
+	idCount=idCount+1;
 	var addedEvent = track.children(":last");
+	addedEvent.dblclick(function(){
+		//alert("click");
+		if ($(this).hasClass('selectedevent')) $(this).removeClass('selectedevent');
+		else{
+			$('.selectedevent').removeClass('selectedevent');
+			$(this).addClass('selectedevent');
+		}
+	});
 
 	addedEvent.draggable({
 		containment: "parent",
@@ -154,8 +186,7 @@ function addEvent(track, trackEvent){
 			$(this).attr("data-end", end);
 		}
 	});
-	console.log('event added');
-	console.log(addedEvent);
+	//console.log(addedEvent.attr("data-fragment"));
 	return addedEvent;
 }
 

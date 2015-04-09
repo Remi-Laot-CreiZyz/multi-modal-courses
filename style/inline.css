@@ -94,6 +94,9 @@
 	background: white;
 }
 
+/* TIMELINE EVENT */
+
+
 .timeline-track-event
 {
 	min-height: 1.2em; max-height: 1.2em;
@@ -101,4 +104,9 @@
 	position: absolute;
 	border-radius: 0.2em 0.2em 0.2em 0.2em;
 	background-color: #5882FA;
+}
+
+
+.selectedevent{
+	background: black;
 }

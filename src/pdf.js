@@ -66,6 +66,7 @@ function loadPdf(fragment){
 }
 
 function displayFragment(eventElement){
+	console.log("eventElement.attr('data-fragment') : "+eventElement.attr('data-fragment'));
 	var fragment = eventElement.attr('data-fragment'),
 		parameters = fragment.split('?')[1].split('&'),
 		pageIndex = -1,
@@ -88,18 +89,32 @@ function displayFragment(eventElement){
 	}
 
 	if (pageIndex != -1 && offsetXIndex != -1 && offsetYIndex != -1 && widthIndex != -1 && heightIndex != -1){
-		console.log("affichage fragment ("+eventElement.attr('data-fragment')+")")
+		//console.log("affichage fragment ("+eventElement.attr('data-fragment')+")")
 		var target_canvas_wrapper = $('#pdf-container').find('.canvas-wrapper[data-page='+parameters[pageIndex].split('=')[1]+']');
 		// Si la page est pas affichée
 		if (target_canvas_wrapper) {
-			target_canvas_wrapper.append('<div class="pdf-fragment"></div>');
+
+	for (var i = 0; i < parameters.length; i++){
+		if (parameters[i].split('=')[0] == 'id')
+			target_canvas_wrapper.append('<div class="pdf-fragment" data-id="'+parameters[i].split('=')[1]+'"></div>');
+	}
+
+			
 			var addedDiv = target_canvas_wrapper.find('.pdf-fragment:last');
+			addedDiv.dblclick(function(){
+				event = $(".timeline-track-event[data-id="+$(this).attr("data-id")+"]");
+				//event.addClass("selectedevent");
+				if (event.hasClass('selectedevent')) event.removeClass('selectedevent');
+				else{
+					$('.selectedevent').removeClass('selectedevent');
+					event.addClass('selectedevent');
+				}
+			})
 
 			addedDiv.width(parseFloat(parameters[widthIndex].split('=')[1]) * parseFloat(addedDiv.closest('.canvas-wrapper').attr('data-scale')));
 			addedDiv.height(parseFloat(parameters[heightIndex].split('=')[1]) * parseFloat(addedDiv.closest('.canvas-wrapper').attr('data-scale')));
 			addedDiv.css('left', ((parseFloat(parameters[offsetXIndex].split('=')[1]) * parseFloat(addedDiv.closest('.canvas-wrapper').attr('data-scale')))));
-			addedDiv.css('top', ((parseFloat(parameters[offsetYIndex].split('=')[1]) * parseFloat(addedDiv.closest('.canvas-wrapper').attr('data-scale')))));
-
+			addedDiv.css('top', $( "#pdf-container" ).scrollTop());
 			// RESIZABLE FRAGMENT
 			addedDiv.resizable({
 				containment: "parent",
