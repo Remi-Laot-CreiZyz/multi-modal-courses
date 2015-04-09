@@ -46,14 +46,6 @@ function createTimeline(timelineElement, duree){
 		});
 
 
-		
-<<<<<<< HEAD
-		$('<button/>',{type:"submit",class:"btn-primary", style:"width:6em", id:"assigner"}).text("assigner").appendTo($('<div/>',{class:"col-xs-6 right-control"}).appendTo($('.row-right-control3')));
-		$('<button/>',{type:"submit",class:"btn-primary", style:"width:6em"}).text("editer").appendTo($('<div/>',{class:"col-xs-6 right-control"}).appendTo($('.row-right-control3')));
-=======
->>>>>>> d3a42f98f1660ff02eaeb4abbd7249276ac36729
-
-
 		$('<button/>',{type:"submit",class:"btn-primary", style:"width:6em",id:"ajout-frament"}).text("ajout-frament").appendTo($('<div/>',{class:"col-xs-6 right-control"}).appendTo($('.row-right-control3')));
 		
 		$("#ajout-frament").click(function(){
@@ -64,11 +56,12 @@ function createTimeline(timelineElement, duree){
 					type: 'pdf',
 					startTime: 0, // CURRENT TIME VIDEO
 					endTime: 5, // CURRENT TIME VIDEO + 5
-					fragment: 'urlPdf?page=1&offsetx=0&offsety=0&width=200&height=100'
+					fragment: 'urlPdf?page='+getCurrentPage()+'&offsetx=0&offsety=0&width=200&height=100'
 				});
 				resizeEventsTimeline($('#timeline'));
 				displayFragment(newEvent);
 			}
+			alert(getCurrentPage());
 			//alert("addTrack");
 			// addEvent(getTrack($("#timeline",$('.selected').index())),{type:'pdf',startTime:$("#video").currentTime,endTime:$("#video").currentTime+2,});
 		});
@@ -159,11 +152,6 @@ function addEvent(track, trackEvent){
 			var start = parseFloat($(this).attr("data-start"));
 			var end = Math.min(start + dureeEvent, parseFloat(track.closest(".timeline-panel").attr("data-duree")));
 			$(this).attr("data-end", end);
-<<<<<<< HEAD
-			console.log(end);
-=======
-			resizeEventsTimeline($('#timeline'));
->>>>>>> d3a42f98f1660ff02eaeb4abbd7249276ac36729
 		}
 	});
 	console.log('event added');

@@ -124,6 +124,7 @@ function displayFragment(eventElement){
 							newFragment += parameters[i];
 					}
 					eventElement.attr('data-fragment', newFragment);
+					
 				}
 			});
 
@@ -148,4 +149,24 @@ function displayFragment(eventElement){
 			});
 		}
 	}
+}
+
+function getCurrentPage(){
+	var pdf_container = $( "#pdf-container" );
+		var currentTop=pdf_container.scrollTop();
+		var height=0;
+		var page = -1;
+		pdf_container.find(".canvas-wrapper").each(function(){
+			height=height+$(this).outerHeight();
+			//console.log("currentTop : "+currentTop)
+			//console.log("height : "+height);
+			if(currentTop<height && ($(this).attr("data-page") < page || page == -1)){
+				//console.log($(this).attr("data-page"));
+				page = $(this).attr("data-page");
+			}
+		});
+
+		return page;
+
+		//return currentTop/$(this).height();
 }
