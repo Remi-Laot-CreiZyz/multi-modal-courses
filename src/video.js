@@ -24,11 +24,45 @@ $(document).ready(function(){
 	var unXml = "<machin><track><fragment><track-timeline start='2' end='5'><track-timeline-event type='pdf' page='2' offsetx='0' offsety='217.833' width='202' height='100' /></track-timeline></fragment><fragment><track-timeline start='2' end='5'><track-timeline-event type='pdf' page='2' offsetx='211' offsety='401' width='201' height='100' /></track-timeline></fragment><fragment><track-timeline start='2' end='5'><track-timeline-event type='pdf' page='2' offsetx='0' offsety='437' width='201' height='100' /></track-timeline></fragment><fragment><track-timeline start='2' end='5'><track-timeline-event type='pdf' page='2' offsetx='208' offsety='601' width='201' height='100' /></track-timeline></fragment></track><fragment><track-timeline start='2' end='5'><track-timeline-event type='pdf' page='2' offsetx='0' offsety='695' width='201' height='100' /></track-timeline></fragment><fragment><track-timeline start='2' end='5'><track-timeline-event type='pdf' page='3' offsetx='0' offsety='248' width='201' height='100' /></track-timeline></fragment></track></machin>"
 
 
-	$('input[value="importer"]').click(function(){
-		importFragment(unXml);
+	$('input[value="importer"]').click(function(e){
+		// MODAL WINDOW for DETAIL
+
+		var popup = $('#popup').css('visibility', 'visible');
+
+		popup.append('<div id="fade"></div>');
+
+		popup.find('input[type=textarea]').val('');
+		popup.find('input[type=button]').click(function(e){
+			importFragment(popup.find('input[type=textarea]').val());
+			popup.css('visibility', 'hidden');
+			$(this).closest('#popup').find('#fade').remove();
+		});
+
+		// QUIT DETAIL
+		$("#fade").click(function(e){
+			popup.css('visibility', 'hidden');
+			$(this).remove();
+		});
+		
 	});
 
-	$('input[value="exporter"]').click(function(){
-		alert(exportFragment());
+	$('input[value="exporter"]').click(function(e){
+		// MODAL WINDOW for DETAIL
+
+		var popup = $('#popup').css('visibility', 'visible');
+
+		popup.append('<div id="fade"></div>');
+
+		popup.find('input[type=textarea]').val(exportFragment());
+		popup.find('input[type=button]').click(function(e){
+			popup.css('visibility', 'hidden');
+			$(this).closest('#popup').find('#fade').remove();
+		});
+
+		// QUIT DETAIL
+		$("#fade").click(function(e){
+			popup.css('visibility', 'hidden');
+			$(this).remove();
+		});
 	});
 });
