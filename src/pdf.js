@@ -121,7 +121,7 @@ function displayFragment(eventElement){
 				handles : "n,s,e,w,ne,nw,se,sw",
 				stop: function( event, ui ) {
 					var pdf_container = $(this).closest('.canvas-wrapper');
-					var newFragment = fragment.split('?')[0];
+					var newFragment = fragment.split('?')[0]+"?";
 					var width = Math.min((event.pageX - $(this).offset().left), pdf_container.width())/parseFloat($(this).closest('.canvas-wrapper').attr('data-scale')); // $(this).width n'est pas mit à jours lorsque l'event est lancé
 					var height = Math.min((event.pageY - $(this).offset().top), pdf_container.height())/parseFloat($(this).closest('.canvas-wrapper').attr('data-scale')); // $(this).height n'est pas mit à jours lorsque l'event est lancé
 					for (var i = 0; i < parameters.length; i++){

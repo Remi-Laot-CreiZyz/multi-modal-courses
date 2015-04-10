@@ -1,4 +1,5 @@
 var idCount = 0;
+var unXml = "<track><fragment><track-timeline start='2' end='5'><track-timeline-event type='pdf' page='2' offsetx='0px' offsety='942px' width='201px' height='100px' /></track-timeline></fragment><fragment><track-timeline start='2' end='5'><track-timeline-event type='pdf' page='3' offsetx='0px' offsety='1824px' width='201px' height='100px' /></track-timeline></fragment></track>"
 
 $(document).ready(function(){
 	createTimeline($('#timeline'), 36.51);
@@ -23,6 +24,11 @@ function createTimeline(timelineElement, duree){
 			$('#time').append('<input type="text"/>');
 			$('#time').append('<span></span>');
 			$('#time span').html("/"+duree);
+			$('#playpause').click(function(){
+				alert(exportFragment());
+				//importFragment(unXml);
+
+			});
 		// Track controls
 		control_panel.append('<div class="track-controls"></div>');
 		var track_controls = $('.track-controls');
@@ -218,3 +224,52 @@ function getTrack(timeline, index)
 function getEvent(track, index){
 	return track.children(':eq('+index+')');
 }
+
+function exportFragment(){
+	var expot="<track>";
+	$(".timeline-track").each(function(){
+				$(this).find(".timeline-track-event").each(function(){
+					console.log("export :"+$(this).attr('data-fragment'));
+					var parameters = $(this).attr('data-fragment').split('?')[1].split('&'),
+					indexPage;
+					for (var i = 0; i < parameters.length; i++){
+							if (parameters[i].split('=')[0] == 'page')
+								indexPage=i;
+					}
+					var fragment = $(".pdf-fragment[data-id="+$(this).attr('data-id')+"]");
+					expot=expot+"<fragment><track-timeline start='2' end='5'><track-timeline-event type='pdf' page='"+parameters[indexPage].split('=')[1]+"' offsetx='"+fragment.css('left')+"' offsety='"+fragment.css('top')+"' width='"+fragment.css('width')+"' height='"+fragment.css('height')+"' /></track-timeline></fragment>"
+				});
+			expot=expot+"</track>"
+		});
+	
+	return expot;
+}
+
+function importFragment(text){
+	var xml = text,
+	xmlDoc = $.parseXML( xml ),
+	$xml = $( xmlDoc );
+	//$title = $xml.find( "title" );
+
+				
+	$xml.find('track').each(function(){
+		addTrack($("#timeline"));
+		var selected_track = $('.timeline-tracks-holder > .selected');
+			
+		$(this).find("fragment").each(function(){
+			if (selected_track.length!=0){
+			var newEvent = addEvent(selected_track, {
+					type: ''+$(this).find("track-timeline-event").attr('type')+'',
+					startTime: $(this).find("track-timeline").attr("start"), // CURRENT TIME VIDEO
+					endTime: $(this).find("track-timeline").attr("end"), // CURRENT TIME VIDEO + 5
+					fragment: 'urlPdf?id='+idCount+'&page='+$(this).find("track-timeline-event").attr('page')+'&offsetx='+$(this).find("track-timeline-event").attr('offsetx')+'&offsety='+$(this).find("track-timeline-event").attr('offsety')+'&width='+$(this).find("track-timeline-event").attr('width')+'&height='+$(this).find("track-timeline-event").attr('height')+''
+			});
+			resizeEventsTimeline($('#timeline'));
+			displayFragment(newEvent);
+			}
+		});
+		
+
+	});
+}
+
