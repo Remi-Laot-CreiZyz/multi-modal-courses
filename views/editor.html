@@ -1,5 +1,6 @@
 <head>
 	<title>editor</title>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 	<!-- JQuery -->
 	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
 	<!-- jQuery UI libray -->
@@ -9,9 +10,11 @@
 	<script type="text/javascript" src="../lib/pdf.js"></script>
 	<script type="text/javascript" src="../lib/pdf.worker.js"></script>
 	<!-- JS SCRIPTS -->
+	<script type="text/javascript" src="../src/timeline-utils.js"></script>
 	<script type="text/javascript" src="../src/pdf.js"></script>
 	<script type="text/javascript" src="../src/timeline.js"></script>
 	<script type="text/javascript" src="../src/resize.js"></script>
+	<script type="text/javascript" src="../src/video.js"></script>
 	<!-- BOOTSTRAP -->
 	<link rel="stylesheet" type="text/css" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
 	<!-- CSS -->
@@ -27,8 +30,8 @@
 <body>
 	<div class="container-fluid">
 		<div id="header" class="row">
-		  <div class="col-xs-6">Titre projet</div>
-		  <div class="col-xs-6">Titre pdf</div>
+		  <div class="col-xs-6"><input type='file' name='path-video' accept="video/*"/><input type='button' value='charger vidéo'/></div>
+		  <div class="col-xs-6"><input type='file' name='path-pdf'/><input type='button' value='charger pdf'/></div>
 		</div>
 
 		<div id="content" class="row">
@@ -36,7 +39,7 @@
 			  	<div id="video-wrapper">
 				</div>
 			  </div>
-			  <div class="col-xs-6">
+			  <div id="pdf-content" class="col-xs-6">
 			  	<div id="pdf-container">
 				</div>
 			  </div>
