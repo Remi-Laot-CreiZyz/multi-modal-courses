@@ -107,7 +107,7 @@
 {
 	z-index: 9999;
 	cursor: move;
-	background-color: orange;
+	background-color: #819FF7;
 }
 
 /* PDF FRAGMENTS */
@@ -123,5 +123,5 @@
 {
 	z-index: 9999;
 	cursor: move;
-	background: orange;
+	background: #819FF7;
 }

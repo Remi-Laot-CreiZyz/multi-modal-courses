@@ -5,26 +5,29 @@ function createTimeline(timelineElement, video){
 	var counter = 0;
 
 	setInterval(function(e){
-		counter ++;
-		$('.timeline-track-event').each(function(e){
-			console.log("!!!!"+counter);
-			console.log(parseFloat($(this).attr('data-start')));
-			console.log(parseFloat($(this).attr('data-end')));
-			console.log(video.currentTime);
-			console.log("!!!!"+counter);
-			if (parseFloat($(this).attr('data-start')) <= video.currentTime && video.currentTime <= parseFloat($(this).attr('data-end'))){
-				console.log('REUSSI!');
-				$('.pdf-fragment[data-id="'+$(this).attr('data-id')+'"]').css('background-color', '#58ACFA');
-				$(this).css('background-color', '#58ACFA');
-				$(this).addClass('displayed');
-				goToFragment($(this).attr('data-fragment'));
-			}
-			else {
+		if ($("input[type=checkbox]").is(':checked')){
+			$('.timeline-track-event').each(function(e){
+				if (parseFloat($(this).attr('data-start')) <= video.currentTime && video.currentTime <= parseFloat($(this).attr('data-end'))){
+					$('.pdf-fragment[data-id="'+$(this).attr('data-id')+'"]').css('background-color', 'orange');
+					$(this).css('background-color', 'orange');
+					$(this).addClass('displayed');
+					goToFragment($(this).attr('data-fragment'));
+				}
+				else {
+					$(this).css('background-color', '');
+					$('.pdf-fragment[data-id="'+$(this).attr('data-id')+'"]').css('background-color', '');
+					$(this).removeClass('displayed');
+				}
+			})
+		}
+		else
+		{
+			$('.timeline-track-event.displayed').each(function(e){
 				$(this).css('background-color', '');
 				$('.pdf-fragment[data-id="'+$(this).attr('data-id')+'"]').css('background-color', '');
 				$(this).removeClass('displayed');
-			}
-		})
+			});
+		}
 	}, 1000);
 
 	timelineElement.addClass('row').html('');

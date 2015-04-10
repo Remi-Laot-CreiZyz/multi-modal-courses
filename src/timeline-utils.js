@@ -53,8 +53,9 @@ function resizeEventsTimeline(timeline){
 }
 
 function exportFragment(){
-	var expot="<track>";
+	var _export="<tracks>";
 	$(".timeline-track").each(function(){
+			_export=_export+"<track>"
 				$(this).find(".timeline-track-event").each(function(){
 					console.log("export :"+$(this).attr('data-fragment'));
 					var parameters = $(this).attr('data-fragment').split('?')[1].split('&'),
@@ -64,22 +65,20 @@ function exportFragment(){
 								indexPage=i;
 					}
 					var fragment = $(".pdf-fragment[data-id="+$(this).attr('data-id')+"]");
-					expot=expot+"<fragment><track-timeline start='2' end='5'><track-timeline-event type='pdf' page='"+parameters[indexPage].split('=')[1]+"' offsetx='"+parseFloat(fragment.css('left'))+"' offsety='"+parseFloat(fragment.css('top'))+"' width='"+parseFloat(fragment.css('width'))+"' height='"+parseFloat(fragment.css('height'))+"' /></track-timeline></fragment>"
+					_export=_export+"<fragment><track-timeline start='"+$(this).attr('data-start')+"' end='"+$(this).attr('data-end')+"' ><track-timeline-event type='pdf' page='"+parameters[indexPage].split('=')[1]+"' offsetx='"+parseFloat(fragment.css('left'))+"' offsety='"+parseFloat(fragment.css('top'))+"' width='"+parseFloat(fragment.css('width'))+"' height='"+parseFloat(fragment.css('height'))+"' /></track-timeline></fragment>"
 				});
-			expot=expot+"</track>"
+			_export=_export+"</track>"
 		});
+	_export=_export+"</tracks>"
 	
-	return expot;
+	return _export;
 }
 
 function importFragment(text){
 	var xml = text,
 	xmlDoc = $.parseXML( xml ),
-	$xml = $( xmlDoc );
-	//$title = $xml.find( "title" );
-
-				
-	$xml.find('track').each(function(){
+	$xml = $( xmlDoc );		
+	$xml.find('tracks').find('track').each(function(){
 		addTrack($("#timeline"));
 		var selected_track = $('.timeline-track.selected-track');
 			
