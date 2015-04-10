@@ -1,14 +1,30 @@
+/* HEADER */
+#header input
+{
+	display: inline-block;
+}
+
+/* VIDEO */
+video
+{
+	max-width: 100%;
+	max-height: 100%;
+	margin: auto;
+}
+
 /* PDF */
 .canvas-wrapper
 {
+	position: relative;
 	margin: 0.5em 1em 0.5em 0em;
 	border: 1px solid #AAAAAA;
 }
 
 #pdf-container
 {
-	overflow-y: scroll;
 	width: 100%;
+	overflow-y: scroll;
+	position: relative;
 }
 
 /* CONTROLS */
@@ -66,6 +82,37 @@
 	background-color: #E4E4E4;
 }
 
+.timeline-track-selector
+{
+	display: inline-block;
+	height: 1.5em; width: 1%;
+	margin: 0; padding: 0;
+	background-color: white;
+	border-bottom: 1px solid #AAAAAA;
+	border-right: 1px solid #AAAAAA;
+	cursor: pointer;
+}
+
+.timeline-track-selector.selected-track
+{
+	background-color: #E4E4E4;
+	box-shadow: 0px 0px 3px 3px #CACACA inset;
+}
+
+.timeline-track
+{
+	display: inline-block;
+	height: 1.5em; width: 99%;
+	margin: 0; padding: 0;
+	border-bottom: 1px solid #AAAAAA;
+	overflow-x: hidden;
+}
+
+.timeline-track.selected-track
+{
+	box-shadow: 0px 0px 3px 3px white inset;
+}
+
 .timeline-zone-selector
 {
 	position: fixed;
@@ -74,14 +121,6 @@
 	padding: 10px 0px 10px 0px;
 	border-top: 1px solid #AAAAAA;
 	background-color: white;
-}
-
-.timeline-track
-{
-	height: 1em; width: 100%;
-	margin: 1px 0px 2px 0px;
-	border-bottom: 1px solid white;
-	opacity: 0.5;
 }
 
 /* slider time timeline */
@@ -137,4 +176,15 @@
     top: -5px; left: -5px;
     border-style:none;
     border-radius: 0px 0px 0px 0px;
+}
+
+#time-position
+{
+	z-index: 9999999999;
+	display: inline-block;
+	width: 2px; height: 100%;
+	position: absolute;
+	top: 0; left: 4px;
+	opacity: 0.5;
+	background-color: #58ACFA;
 }

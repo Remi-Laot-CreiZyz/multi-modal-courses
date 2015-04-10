@@ -1,34 +1,60 @@
 var idCount = 0;
-var unXml = "<track><fragment><track-timeline start='2' end='5'><track-timeline-event type='pdf' page='2' offsetx='0px' offsety='942px' width='201px' height='100px' /></track-timeline></fragment><fragment><track-timeline start='2' end='5'><track-timeline-event type='pdf' page='3' offsetx='0px' offsety='1824px' width='201px' height='100px' /></track-timeline></fragment></track>"
 
-$(document).ready(function(){
-	createTimeline($('#timeline'), 36.51);
-	
-	// $('#timeline').mouseover(function(e){
-	// 	$('#positionInTimeline').html('temps: ' + ((event.pageX/$(this).width())*parseFloat($(this).find(".timeline-panel").attr("data-duree"))).toFixed(2))
-	// });
-});
+function createTimeline(timelineElement, video){
 
-function createTimeline(timelineElement, duree){
-	timelineElement.addClass('row');
+	var counter = 0;
+
+	setInterval(function(e){
+		counter ++;
+		$('.timeline-track-event').each(function(e){
+			console.log("!!!!"+counter);
+			console.log(parseFloat($(this).attr('data-start')));
+			console.log(parseFloat($(this).attr('data-end')));
+			console.log(video.currentTime);
+			console.log("!!!!"+counter);
+			if (parseFloat($(this).attr('data-start')) <= video.currentTime && video.currentTime <= parseFloat($(this).attr('data-end'))){
+				console.log('REUSSI!');
+				$('.pdf-fragment[data-id="'+$(this).attr('data-id')+'"]').css('background-color', '#58ACFA');
+				$(this).css('background-color', '#58ACFA');
+				$(this).addClass('displayed');
+				goToFragment($(this).attr('data-fragment'));
+			}
+			else {
+				$(this).css('background-color', '');
+				$('.pdf-fragment[data-id="'+$(this).attr('data-id')+'"]').css('background-color', '');
+				$(this).removeClass('displayed');
+			}
+		})
+	}, 1000);
+
+	timelineElement.addClass('row').html('');
 	
 	/* control-panel-top */
 	timelineElement.append('<div class="col-xs-6 col-md-3 control-panel"></div>');
 	var control_panel = $('.control-panel');
-		// Video controls 
-		control_panel.append('<div class="video-controls"></div>');
-		var video_controls = control_panel.children('.video-controls');
-		video_controls.append('<div id="playpause" class="play"></div>');
-		video_controls.append('<div id="volume" class="volume-100"></div>');
-		video_controls.append('<div id="time" class="time-detail"></div>');
-			$('#time').append('<input type="text"/>');
-			$('#time').append('<span></span>');
-			$('#time span').html("/"+duree);
-			$('#playpause').click(function(){
-				alert(exportFragment());
-				//importFragment(unXml);
 
-			});
+		// Video controls
+		var video_controls = $(document.createElement('div')).addClass('video-controls')
+		control_panel.append(video_controls);
+		video_controls.append($(document.createElement('div')).attr('id','playpause').addClass('play').click(function(e){
+			// Click handler play/pause button
+			if ($(this).hasClass('play')) { $(this).removeClass('play'); $(this).addClass('pause'); video.play(); }
+			else { $(this).removeClass('pause'); $(this).addClass('play'); video.pause(); }
+		})).append($(document.createElement('div')).attr('id', 'volume').addClass('volume-100').click(function(e){
+			// Click handler volume button
+			if ($(this).hasClass('volume-100')) { $(this).removeClass('volume-100'); $(this).addClass('volume-50'); video.volume = 0.5; }
+			else if ($(this).hasClass('volume-50')) { $(this).removeClass('volume-50'); $(this).addClass('volume-0'); video.volume = 0; }
+			else { $(this).removeClass('volume-0'); $(this).addClass('volume-100'); video.volume = 1; }
+		})).append($(document.createElement('div')).attr('id', 'time').addClass('time-detail').append($(document.createElement('input')).attr('type', 'text')).append($(document.createElement('span')).html("/"+video.duration.toFixed(2))));
+
+		// Click on time
+		$('#time').click(function(e){
+			$(this).find('input').focus();
+		});
+		// Check time inputs
+		$('#time>input').on('input', function(e){
+			$(this).val($(this).val().replace(/[^0-9.]/g,''));
+		})
 		// Track controls
 		control_panel.append('<div class="track-controls"></div>');
 		var track_controls = $('.track-controls');
@@ -55,14 +81,12 @@ function createTimeline(timelineElement, duree){
 		$('<button/>',{type:"submit",class:"btn-primary", style:"width:6em",id:"deleteTrack"}).text("supprimer track").appendTo($('<div/>',{class:"col-xs-6 right-control"}).appendTo($('.row-right-control1')));
 
 		$("#deleteTrack").click(function(){
-			if(!$(".timeline-track").hasClass('selected')){
+			if(!$(".timeline-track").hasClass('selected-track')){
 				alert("no timline selected");
 				return;
 			}
-			//console.log($(".timeline-track.selected"));
 			$(".timeline-track.selected").find(".timeline-track-event").each(function(){
 				var eventFragment = $(this);
-				console.log(eventFragment);
 				$(".pdf-fragment").each(function(){
 					if($(this).attr("data-id")==eventFragment.attr("data-id"))$(this).remove();
 				});
@@ -75,25 +99,26 @@ function createTimeline(timelineElement, duree){
 		$('<button/>',{type:"submit",class:"btn-primary", style:"width:6em",id:"ajout-frament"}).text("ajouter fragment").appendTo($('<div/>',{class:"col-xs-6 right-control"}).appendTo($('.row-right-control3')));
 		
 		$("#ajout-frament").click(function(){
-			if(!$(".timeline-track").hasClass('selected')){
-				alert("no timline selected");
+			if(!$(".timeline-track").hasClass('selected-track')){
+				alert("no timeline selected");
 				return;
 			}
-			var selected_track = $('.timeline-tracks-holder > .selected');
-			//console.log(selected_track);
-			if (!$.isEmptyObject(selected_track)){
+			var selected_track = $('.timeline-track.selected-track');
+			if (selected_track.length != 0 && $('.canvas-wrapper').length != 0){
+				document.getElementById('video').pause();
+				$('#playpause').removeClass('pause').addClass('play');
 				var newEvent = addEvent(selected_track, {
 					type: 'pdf',
-					startTime: 0, // CURRENT TIME VIDEO
-					endTime: 5, // CURRENT TIME VIDEO + 5
-					fragment: 'urlPdf?id='+idCount+'&page='+getCurrentPage()+'&offsetx=0&offsety=0&width=200&height=100'
+					startTime: document.getElementById('video').currentTime, // CURRENT TIME VIDEO
+					endTime: document.getElementById('video').currentTime+5, // CURRENT TIME VIDEO + 5
+					fragment: 'urlPdf?id='+idCount+'&page='+getCurrentPageNumber()+'&offsetx=0&offsety='+Math.max(0, getScrollInCurrentPage())+'&width=200&height=100'
 				});
 				resizeEventsTimeline($('#timeline'));
 				displayFragment(newEvent);
 
 
 			}
-			//alert(getCurrentPage());
+			//alert(getCurrentPageNumber());
 			//alert("addTrack");
 			// addEvent(getTrack($("#timeline",$('.selected').index())),{type:'pdf',startTime:$("#video").currentTime,endTime:$("#video").currentTime+2,});
 		});
@@ -101,12 +126,11 @@ function createTimeline(timelineElement, duree){
 		$('<button/>',{type:"submit",class:"btn-primary", style:"width:6em", id:"deleteFragment"}).text("supprimer fragment").appendTo($('<div/>',{class:"col-xs-6 right-control"}).appendTo($('.row-right-control3')));
 
 		$("#deleteFragment").click(function(){
-			if(!$(".timeline-track-event").hasClass('selectedevent')){
+			if(!$(".timeline-track-event").hasClass('selected-event')){
 				alert("no fragment selected");
 				return;
 			}
-			var eventFragment = $(".selectedevent");
-			console.log(eventFragment);
+			var eventFragment = $(".selected-event");
 
 			if(eventFragment.length!=0){
 				$(".pdf-fragment").each(function(){
@@ -118,14 +142,21 @@ function createTimeline(timelineElement, duree){
 		});
 
 	/* timeline-panel */
-	timelineElement.append('<div class="timeline-panel col-xs-12 col-md-9" data-duree="'+duree+'"></div>')
+	timelineElement.append('<div class="timeline-panel col-xs-12 col-md-9" data-duree="'+video.duration+'"></div>')
 	var timeline_panel = $('.timeline-panel');
 		// Time controls
-		timeline_panel.append('<div class="timeline-controls"></div>');
+		timeline_panel.append('<div class="timeline-controls" data-start="0" data-end="'+video.duration+'"></div>');
 		$('.timeline-controls').append('<div id="timeline-time-slider"></div>');
-		$('#timeline-time-slider').slider();
+		$('#timeline-time-slider').slider({
+			step: 0.1,
+			stop : function(event, ui){
+				var video = document.getElementById('video');
+				video.currentTime = (parseFloat($('.timeline-controls').attr('data-end')) - parseFloat($('.timeline-controls').attr('data-start')))*ui.value + parseFloat($('.timeline-controls').attr('data-start'));
+			}
+		});
+		
 		// Timeline tracks
-		timeline_panel.append('<div class="timeline-tracks-holder"></div>');
+		timeline_panel.append($(document.createElement('div')).addClass('timeline-tracks-holder'));
 		// Slider to choose
 		timeline_panel.append('<div class="timeline-zone-selector"></div>');
 		$('.timeline-zone-selector').append('<div id="timeline-zone-slider"></div>');
@@ -133,57 +164,40 @@ function createTimeline(timelineElement, duree){
 			range: true,
 			min: 0,
 			max: 100,
-			values: [0,100]
+			values: [0,100],
+			change: function(event, ui){
+				$('.timeline-controls').attr('data-start', ui.values[0]/100 * video.duration);
+				$('.timeline-controls').attr('data-end', ui.values[1]/100 * video.duration);
+				resizeEventsTimeline($('#timeline'));
+			}
 		});
 
+		$('.timeline-zone-selector').append('<div id="time-position"></div>');
 
-
-	// TESTS
-	//addTrack(timelineElement);
-	
 	resizeEventsTimeline(timelineElement);
-}
-
-function resizeEvent(timeline, event){
-	var duree_timeline = parseFloat(timeline.find('.timeline-panel').attr('data-duree'));
-	var time_start = parseFloat(event.attr('data-start'));
-	var time_end = parseFloat(event.attr('data-end'));
-
-	event.width(((time_end - time_start) / duree_timeline) * timeline.width());
-	event.css('left', (time_start/duree_timeline) * timeline.width() + timeline.offset().left);
-}
-
-function resizeEventsTimeline(timeline){
-	// Resize each events
-	timeline.find('.timeline-track-event').each(function(){
-		resizeEvent(timeline, $(this));
-	})
+	resizeDocument();
 }
 
 function addTrack(timeline){
-	timeline.find('.timeline-track.selected').removeClass('selected');
-	timeline.find('.timeline-tracks-holder').append('<div class="timeline-track selected"></div>');
-	$(".timeline-track" ).off();
-	$(".timeline-track").dblclick(function(){
-		if ($(this).hasClass('selected')) $(this).removeClass('selected');
-		else{
-			$('.timeline-track.selected').removeClass('selected');
-			$(this).addClass('selected');
-		}
-	})
+	timeline.find('.selected-track').removeClass('selected-track');
+	timeline.find('.timeline-tracks-holder').append($(document.createElement('div')).addClass('track-wrapper').append($(document.createElement('div')).addClass('timeline-track-selector').addClass('selected-track').click(function(e){
+		if ($(this).hasClass('selected-track')) { $(this).parent().children().removeClass('selected-track'); }
+		else { $('.selected-track').removeClass('selected-track'); $(this).parent().children().addClass('selected-track'); }
+	})).append($(document.createElement('div')).addClass('timeline-track').addClass('selected-track')));
 }
 
 function addEvent(track, trackEvent){
-	$('.timeline-track-event').removeClass('selectedevent');
-	track.append('<div class="timeline-track-event selectedevent" data-id="'+idCount+'" data-type="'+trackEvent.type+'" data-start="'+trackEvent.startTime+'" data-end="'+trackEvent.endTime+'" data-fragment="'+trackEvent.fragment+'"></div>');
+	deselectEvent($('.timeline-track-event.selected-event'));
+	track.append('<div class="timeline-track-event selected-event" data-id="'+idCount+'" data-type="'+trackEvent.type+'" data-start="'+trackEvent.startTime+'" data-end="'+trackEvent.endTime+'" data-fragment="'+trackEvent.fragment+'"></div>');
 	idCount=idCount+1;
 	var addedEvent = track.children(":last");
-	addedEvent.dblclick(function(){
-		//alert("click");
-		if ($(this).hasClass('selectedevent')) $(this).removeClass('selectedevent');
+
+	addedEvent.dblclick(function(e){
+		if ($(this).hasClass('selected-event')) deselectEvent($(this));
 		else{
-			$('.selectedevent').removeClass('selectedevent');
-			$(this).addClass('selectedevent');
+			goToFragment($(this).attr('data-fragment'));
+			deselectEvent($('.timeline-track-event.selected-event'));
+			selectEvent($(this));
 		}
 	});
 
@@ -192,84 +206,29 @@ function addEvent(track, trackEvent){
 		axis: "x",
 		stop: function( event, ui ) {
 			var dureeEvent = parseFloat($(this).attr('data-end'))-parseFloat($(this).attr('data-start'));
-			var start = (($(this).offset().left-track.offset().left)/track.width())*parseFloat(track.closest(".timeline-panel").attr("data-duree"));
+			var start = (($(this).offset().left-track.offset().left)/track.width())*(parseFloat(track.closest(".timeline-panel").find('.timeline-controls').attr("data-end")) - parseFloat(track.closest(".timeline-panel").find('.timeline-controls').attr("data-start")));
 			var end = start+dureeEvent;
 			$(this).attr("data-start", start);
 			$(this).attr("data-end", end);
-			resizeEventsTimeline($('#timeline'));
 		}
 	});
 
 	addedEvent.resizable({
+		refreshPositions: true,
 		containment: "parent",
-		animate: true,
+		// animate: true,
 		handles: "e",
 		stop: function(event, ui) {
-			var width = event.pageX - $(this).offset().left; // $(this).width n'est pas mit à jours lorsque l'event est lancé
-			var dureeEvent = (width/track.width())*parseFloat(track.closest(".timeline-panel").attr("data-duree"));
+			var width = $(this).width(); // $(this).width n'est pas mit à jours lorsque l'event est lancé
+			var dureeTimeline = (parseFloat(track.closest(".timeline-panel").find('.timeline-controls').attr("data-end")) - parseFloat(track.closest(".timeline-panel").find('.timeline-controls').attr("data-start")));
+			var dureeEvent = (width/track.width())*dureeTimeline;
 			var start = parseFloat($(this).attr("data-start"));
-			var end = Math.min(start + dureeEvent, parseFloat(track.closest(".timeline-panel").attr("data-duree")));
+			var end = Math.min(start + dureeEvent, dureeTimeline);
 			$(this).attr("data-end", end);
+			resizeEventsTimeline($('#timeline'));
 		}
 	});
-	//console.log(addedEvent.attr("data-fragment"));
 	return addedEvent;
-}
 
-function getTrack(timeline, index)
-{
-	return timeline.find('.timeline-tracks-holder').children(':eq('+index+')');
-}
-
-function getEvent(track, index){
-	return track.children(':eq('+index+')');
-}
-
-function exportFragment(){
-	var expot="<track>";
-	$(".timeline-track").each(function(){
-				$(this).find(".timeline-track-event").each(function(){
-					console.log("export :"+$(this).attr('data-fragment'));
-					var parameters = $(this).attr('data-fragment').split('?')[1].split('&'),
-					indexPage;
-					for (var i = 0; i < parameters.length; i++){
-							if (parameters[i].split('=')[0] == 'page')
-								indexPage=i;
-					}
-					var fragment = $(".pdf-fragment[data-id="+$(this).attr('data-id')+"]");
-					expot=expot+"<fragment><track-timeline start='2' end='5'><track-timeline-event type='pdf' page='"+parameters[indexPage].split('=')[1]+"' offsetx='"+fragment.css('left')+"' offsety='"+fragment.css('top')+"' width='"+fragment.css('width')+"' height='"+fragment.css('height')+"' /></track-timeline></fragment>"
-				});
-			expot=expot+"</track>"
-		});
-	
-	return expot;
-}
-
-function importFragment(text){
-	var xml = text,
-	xmlDoc = $.parseXML( xml ),
-	$xml = $( xmlDoc );
-	//$title = $xml.find( "title" );
-
-				
-	$xml.find('track').each(function(){
-		addTrack($("#timeline"));
-		var selected_track = $('.timeline-tracks-holder > .selected');
-			
-		$(this).find("fragment").each(function(){
-			if (selected_track.length!=0){
-			var newEvent = addEvent(selected_track, {
-					type: ''+$(this).find("track-timeline-event").attr('type')+'',
-					startTime: $(this).find("track-timeline").attr("start"), // CURRENT TIME VIDEO
-					endTime: $(this).find("track-timeline").attr("end"), // CURRENT TIME VIDEO + 5
-					fragment: 'urlPdf?id='+idCount+'&page='+$(this).find("track-timeline-event").attr('page')+'&offsetx='+$(this).find("track-timeline-event").attr('offsetx')+'&offsety='+$(this).find("track-timeline-event").attr('offsety')+'&width='+$(this).find("track-timeline-event").attr('width')+'&height='+$(this).find("track-timeline-event").attr('height')+''
-			});
-			resizeEventsTimeline($('#timeline'));
-			displayFragment(newEvent);
-			}
-		});
-		
-
-	});
 }
 

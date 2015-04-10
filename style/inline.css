@@ -88,25 +88,40 @@
 	vertical-align: middle;
 }
 
-/* TIMELINE */
-.timeline-tracks-holder > .selected
-{
-	background: white;
-}
-
 /* TIMELINE EVENT */
 
 
 .timeline-track-event
 {
-	min-height: 1.2em; max-height: 1.2em;
+	z-index: 5000;
+	min-height: 1.4em; max-height: 1.4em;
 	display: inline-block;
+	border-radius: 0.1em 0.1em 0.1em 0.1em;
+	border-left: 1px solid #AAAAAA;
+	border-right: 1px solid #AAAAAA;
+	background-color: white;
 	position: absolute;
-	border-radius: 0.2em 0.2em 0.2em 0.2em;
-	background-color: #5882FA;
 }
 
+.timeline-track-event.selected-event
+{
+	z-index: 9999;
+	cursor: move;
+	background-color: orange;
+}
 
-.selectedevent{
-	background: black;
+/* PDF FRAGMENTS */
+.pdf-fragment
+{
+	z-index: 5000;
+	position: absolute;
+	background-color: black;
+	opacity: 0.25;
+}
+
+.pdf-fragment.selected-event
+{
+	z-index: 9999;
+	cursor: move;
+	background: orange;
 }
