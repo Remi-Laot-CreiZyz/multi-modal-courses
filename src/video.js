@@ -15,11 +15,13 @@ $(document).ready(function(){
 				$('#timeline-time-slider').slider('value', ((pos_time - pos_handle_left) / (pos_handle_right - pos_handle_left) * 100));
 			});
 		});
+		$(window).trigger('resize');
 	});
 	$('input[value="charger pdf"]').click(function(e){
 		var pdf = $('input[name="path-pdf"]')[0].files[0];
 		var url = URL.createObjectURL(pdf);
 		loadPdf(url);
+		$(window).trigger('resize');
 	});
 
 	var unXml = "<tracks><track><fragment><track-timeline start='12.06001728808138' end='17.06001728808138' ><track-timeline-event type='pdf' page='2' offsetx='0' offsety='441' width='201' height='100' /></track-timeline></fragment><fragment><track-timeline start='20.41347371961665' end='25.41347371961665' ><track-timeline-event type='pdf' page='2' offsetx='248' offsety='585' width='201' height='100' /></track-timeline></fragment></track><track><fragment><track-timeline start='24.384789072313744' end='29.384789072313744' ><track-timeline-event type='pdf' page='3' offsetx='285' offsety='559' width='201' height='100' /></track-timeline></fragment><fragment><track-timeline start='4.048915628330342' end='9.048915628330342' ><track-timeline-event type='pdf' page='3' offsetx='0' offsety='511' width='201' height='100' /></track-timeline></fragment></track></tracks>"
